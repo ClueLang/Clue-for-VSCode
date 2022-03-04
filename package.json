@@ -1,0 +1,24 @@
+{
+    "name": "clue",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": ">=0.9.0-pre.1"
+    },
+    "publisher": "Felix44",
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [{
+            "id": "clue",
+            "aliases": ["Clue", "clue"],
+            "extensions": [".clue"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "clue",
+            "scopeName": "source.clue",
+            "path": "./syntaxes/clue.json"
+        }]
+    }
+}
