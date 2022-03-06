@@ -137,7 +137,7 @@
 			]
 		},
 		{
-			"match": "\\b(if|elseif|else|for|of|in|with|while|meta|global|until|local|fn|return|this|loop|continue|break)",
+			"match": "\\b(if|elseif|else|for|of|in|with|while|meta|global|until|local|fn|return|loop|continue|break)",
 			"name": "keyword.control.clue"
 		},
 		{
