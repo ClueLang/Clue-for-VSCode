@@ -3,43 +3,6 @@
 	"scopeName": "source.clue",
 	"patterns": [
 		{
-			"begin": "\\b(?:(local|global)\\s+)?(method|function|fn)\\s*(?:\\s+([a-zA-Z_][a-zA-Z0-9_]*(?:(\\.|::)[a-zA-Z_][a-zA-Z0-9_]*)?)\\s*)?(\\()",
-			"beginCaptures": {
-				"1": {
-					"name": "storage.modifier.local.clue"
-				},
-				"2": {
-					"name": "keyword.control.clue"
-				},
-				"3": {
-					"name": "entity.name.function.clue"
-				},
-				"4": {
-					"name": "punctuation.separator.parameter.clue"
-				},
-				"5": {
-					"name": "punctuation.definition.parameters.begin.clue"
-				}
-			},
-			"end": "\\)",
-			"endCaptures": {
-				"0": {
-					"name": "punctuation.definition.parameters.end.clue"
-				}
-			},
-			"name": "meta.function.clue",
-			"patterns": [
-				{
-					"match": "[a-zA-Z_][a-zA-Z0-9_]*",
-					"name": "variable.parameter.function.clue"
-				},
-				{
-					"match": ",",
-					"name": "punctuation.separator.arguments.clue"
-				}
-			]
-		},
-		{
 			"match": "(?<![\\w\\d.])0[xX][0-9A-Fa-f]+(?![pPeE.0-9])",
 			"name": "constant.numeric.integer.hexadecimal.clue"
 		},
@@ -59,13 +22,13 @@
 			"begin": "'",
 			"beginCaptures": {
 				"0": {
-					"name": "punctuation.definition.string.begin.clue"
+					"name": "punctuation.definition.string.multilined.begin.clue"
 				}
 			},
 			"end": "'",
 			"endCaptures": {
 				"0": {
-					"name": "punctuation.definition.string.end.clue"
+					"name": "punctuation.definition.string.multilined.end.clue"
 				}
 			},
 			"name": "string.quoted.single.clue",
@@ -96,48 +59,31 @@
 			]
 		},
 		{
-			"begin": "(^[ \\t]+)?(?=--)",
+			"match": "//.*",
+			"name": "comment.line.double-dash.clue"
+		},
+		{
+			"begin": "/\\*",
 			"beginCaptures": {
-				"1": {
-					"name": "punctuation.whitespace.comment.leading.clue"
+				"0": {
+					"name": "punctuatio.definition.comment.begin.clue"
 				}
 			},
-			"end": "(?!\\G)((?!^)[ \\t]+\\n)?",
+			"end": "\\*/",
 			"endCaptures": {
-				"1": {
-					"name": "punctuation.whitespace.comment.trailing.clue"
+				"0": {
+					"name": "punctuatio.definition.comment.end.clue"
 				}
 			},
+			"name": "comment.block.clue",
 			"patterns": [
 				{
-					"begin": "\\/\\*",
-					"beginCaptures": {
-						"0": {
-							"name": "punctuation.definition.comment.begin.clue"
-						}
-					},
-					"end": "\\*\\/",
-					"endCaptures": {
-						"0": {
-							"name": "punctuation.definition.comment.end.clue"
-						}
-					},
-					"name": "comment.block.clue"
-				},
-				{
-					"begin": "\\/\\/",
-					"beginCaptures": {
-						"0": {
-							"name": "punctuation.definition.comment.clue"
-						}
-					},
-					"end": "\\n",
-					"name": "comment.line.double-dash.clue"
+					"include": "#escaped_char"
 				}
 			]
 		},
 		{
-			"match": "\\b(if|elseif|else|for|of|in|with|while|meta|global|until|local|fn|return|loop|continue|break)",
+			"match": "\\b(if|elseif|else|for|of|in|with|while|meta|global|until|local|fn|return|loop|static|enum|continue|break)",
 			"name": "keyword.control.clue"
 		},
 		{
@@ -157,7 +103,7 @@
 			"name": "support.function.library.clue"
 		},
 		{
-			"match": "\\b([a-zA-Z_][a-zA-Z0-9_]*)\\b(?=\\s*(?:[({\"']|\\[\\[))",
+			"match": "\\b([a-zA-Z_][a-zA-Z0-9_]*)\\b(?=\\s*\\(.*\\))",
 			"name": "support.function.any-method.clue"
 		},
 		{
@@ -165,7 +111,7 @@
 			"name": "variable.other.clue"
 		},
 		{
-			"match": "\\&|\\||\\!|\\?|:(?!:)|\\+|-|%|#|\\*|\\/|\\^|==?|<=?|>=?|(?<!\\.)\\.{2}(?!\\.)",
+			"match": "\\&|\\||\\!|\\?|\\.|:|\\+|-|%|#|\\*|\\/|\\^|==?|<=?|>=?|(?<!\\.)\\.{2}(?!\\.)",
 			"name": "keyword.operator.clue"
 		}
 	],
