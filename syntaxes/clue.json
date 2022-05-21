@@ -83,7 +83,7 @@
 			]
 		},
 		{
-			"match": "\\b(if|elseif|else|for|of|in|with|while|meta|global|until|local|fn|method|return|loop|static|enum|continue|break|try|catch|switch)\\b",
+			"match": "\\b(if|elseif|else|for|of|in|with|while|meta|global|until|local|fn|method|return|loop|static|enum|continue|break|try|catch|match)\\b",
 			"name": "keyword.control.clue"
 		},
 		{
