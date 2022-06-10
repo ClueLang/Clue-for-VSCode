@@ -83,8 +83,12 @@
 			]
 		},
 		{
-			"match": "\\b(if|elseif|else|for|of|in|with|while|meta|global|until|local|fn|method|return|loop|static|enum|continue|break|try|catch|match|default)\\b",
+			"match": "\\b(if|elseif|else|for|of|in|with|while|meta|until|fn|method|return|loop|enum|continue|break|try|catch|match|default)\\b",
 			"name": "keyword.control.clue"
+		},
+		{
+			"match": "\\b(local|global|static)\\b",
+			"name": "keyword.scope.clue"
 		},
 		{
 			"match": "(?<![^.]\\.|:)\\b(false|nil|true|_G|_VERSION|math\\.(pi|huge))\\b|(?<![.])\\.{3}(?!\\.)",
