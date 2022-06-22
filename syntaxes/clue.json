@@ -83,7 +83,7 @@
 			]
 		},
 		{
-			"match": "\\b(if|elseif|else|for|of|in|with|while|meta|until|fn|method|return|loop|enum|continue|break|try|catch|match|default)\\b",
+			"match": "\\b(if|elseif|else|for|of|in|with|while|meta|until|fn|method|return|loop|enum|continue|break|try|catch|match|default|macro)\\b",
 			"name": "keyword.control.clue"
 		},
 		{
@@ -107,7 +107,7 @@
 			"name": "variable.other.clue"
 		},
 		{
-			"match": "\\&|\\||\\!|\\~|\\?|\\.|\\$|:|\\+|-|%|#|\\*|\\/|\\^|==?|<=?|>=?|(?<!\\.)\\.{2}(?!\\.)",
+			"match": "\\&|\\||\\!|\\~|\\?|\\.|\\$|@|:|\\+|-|%|#|\\*|\\/|\\^|==?|<=?|>=?|(?<!\\.)\\.{2}(?!\\.)",
 			"name": "keyword.operator.clue"
 		}
 	],
