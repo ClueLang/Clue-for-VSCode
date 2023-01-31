@@ -3,6 +3,18 @@
 	"scopeName": "source.clue",
 	"patterns": [
 		{
+			"match": "@(else_(?:ifos|ifdef|ifcmp|if)|ifos|ifdef|ifcmp|if|else|define)",
+			"name": "keyword.control.directive"
+		},
+		{
+			"match": "@macro",
+			"name": "keyword.control.macro"
+		},
+		{
+			"match": "\\$[A-Za-z_][0-9A-Za-z_]*!\\(.*\\)",
+			"name": "meta.preprocessor.macro.invocation"
+		},
+		{
 			"match": "(?<![\\w\\d.])0[xX][0-9A-Fa-f]+(?![pPeE.0-9])",
 			"name": "constant.numeric.integer.hexadecimal.clue"
 		},
@@ -62,13 +74,13 @@
 			"begin": "`",
 			"beginCaptures": {
 				"0": {
-					"name": "punctuation.definition.rawstring.multilined.begin.clue"
+					"name": "punctuation.definition.string.multilined.begin.clue"
 				}
 			},
 			"end": "`",
 			"endCaptures": {
 				"0": {
-					"name": "punctuation.definition.rawstring.multilined.end.clue"
+					"name": "punctuation.definition.string.multilined.end.clue"
 				}
 			},
 			"name": "string.multiline.clue",
@@ -128,7 +140,7 @@
 			"name": "variable.other.clue"
 		},
 		{
-			"match": "\\&|\\||\\!|\\~|\\?|\\.|\\$|@|:|\\+|-|%|#|\\*|\\/|\\^|==?|<=?|>=?|(?<!\\.)\\.{2}(?!\\.)",
+			"match": "\\&|\\||\\!|\\~|\\?|\\.|\\$|@|:|\\+|-|%|#|\\*|\\/|\\^|==?|<=?|>=?|(?<!\\.)\\.{2}(?!\\.)|\\?\\?=?|(&&|\\|\\|)=?",
 			"name": "keyword.operator.clue"
 		}
 	],
