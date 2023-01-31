@@ -7,8 +7,15 @@
 			"name": "keyword.control.directive"
 		},
 		{
-			"match": "@macro",
-			"name": "keyword.control.macro"
+			"match": "(@macro) ([A-Za-z_][0-9A-Za-z_]*)",
+			"captures": {
+				"0": {
+					"name": "meta.preprocessor.macro"
+				},
+				"1": {
+					"name": "keyword.control.macro"
+				}
+			}
 		},
 		{
 			"match": "\\$[A-Za-z_][0-9A-Za-z_]*!\\(.*\\)",
