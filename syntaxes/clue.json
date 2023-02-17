@@ -3,6 +3,17 @@
 	"scopeName": "source.clue",
 	"patterns": [
 		{
+			"match": "(@version) (^([0-9]+)\\.([0-9]+)\\.([0-9]+)(?:-([0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*))?(?:\\+[0-9A-Za-z-]+)?$)",
+			"captures": {
+				"0": {
+					"name": "meta.preprocessor.macro"
+				},
+				"1": {
+					"name": "constant.numeric.integer.clue"
+				}
+			}
+		},
+		{
 			"match": "@(else_(?:ifos|iflua|ifdef|ifcmp|if)|ifos|iflua|ifdef|ifcmp|if|else|version|define|error|print)",
 			"name": "keyword.control.directive"
 		},
