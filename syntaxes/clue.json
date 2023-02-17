@@ -3,12 +3,12 @@
 	"scopeName": "source.clue",
 	"patterns": [
 		{
-			"match": "(@version) ([0-9]+\\.[0-9]+\\.[0-9]+(?:-([0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*))?(?:\\+[0-9A-Za-z-]+)?$)",
+			"match": "(@version) ([0-9]+\\.?[0-9]*\\.?[0-9]*(?:-([0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*))?(?:\\+[0-9A-Za-z-]+)?$)",
 			"captures": {
 				"1": {
-					"name": "meta.preprocessor.macro"
+					"name": "keyword.control.directive"
 				},
-				"2": {
+				"0": {
 					"name": "constant.numeric.integer.clue"
 				}
 			}
