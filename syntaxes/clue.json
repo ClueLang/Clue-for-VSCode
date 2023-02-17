@@ -3,7 +3,7 @@
 	"scopeName": "source.clue",
 	"patterns": [
 		{
-			"match": "@(else_(?:ifos|ifdef|ifcmp|if)|ifos|ifdef|ifcmp|if|else|define|error|print)",
+			"match": "@(else_(?:ifos|iflua|ifclue|ifdef|ifcmp|if)|ifos|iflua|ifclue|ifdef|ifcmp|if|else|define|error|print)",
 			"name": "keyword.control.directive"
 		},
 		{
