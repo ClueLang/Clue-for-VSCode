@@ -6,7 +6,7 @@
 			"match": "(@version) ([0-9]+\\.?[0-9]*\\.?[0-9]*(?:-([0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*))?(?:\\+[0-9A-Za-z-]+)?$)",
 			"captures": {
 				"1": {
-					"name": "keyword.control.directive"
+					"name": "keyword.control.directive.clue"
 				},
 				"0": {
 					"name": "constant.numeric.integer.clue"
@@ -14,23 +14,8 @@
 			}
 		},
 		{
-			"match": "@(else_(?:ifos|iflua|ifdef|ifcmp|if)|ifos|iflua|ifdef|ifcmp|if|else|define|error|print)",
-			"name": "keyword.control.directive"
-		},
-		{
-			"match": "(@macro) ([A-Za-z_][0-9A-Za-z_]*)",
-			"captures": {
-				"0": {
-					"name": "meta.preprocessor.macro"
-				},
-				"1": {
-					"name": "keyword.control.macro"
-				}
-			}
-		},
-		{
-			"match": "\\$[A-Za-z_][0-9A-Za-z_]*!\\(.*\\)",
-			"name": "meta.preprocessor.macro.invocation"
+			"match": "@(else_(?:ifos|iflua|ifdef|ifcmp|if)|ifos|iflua|ifdef|ifcmp|if|else|define|macro|error|print)",
+			"name": "keyword.control.directive.clue"
 		},
 		{
 			"match": "(?<![\\w\\d.])0[xX][0-9A-Fa-f]+(?![pPeE.0-9])",
