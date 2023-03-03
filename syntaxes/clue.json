@@ -17,16 +17,16 @@
 			"match": "(@macro) ([A-Za-z_][0-9A-Za-z_]*)",
 			"captures": {
 				"0": {
-					"name": "meta.preprocessor.macro"
+					"name": "meta.preprocessor.macro.clue"
 				},
 				"1": {
-					"name": "keyword.control.macro"
+					"name": "keyword.control.macro.clue"
 				}
 			}
 		},
 		{
 			"match": "\\$[A-Za-z_][0-9A-Za-z_]*!\\(.*\\)",
-			"name": "meta.preprocessor.macro.invocation"
+			"name": "meta.preprocessor.macro.invocation.clue"
 		},
 		{
 			"match": "@(?:(?:(?:else_)?(?:ifos|iflua|ifdef|ifcmp|if|ifos|iflua|ifdef|ifcmp|if))|else|define|macro|error|print)",
