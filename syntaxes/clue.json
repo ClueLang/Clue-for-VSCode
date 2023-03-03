@@ -14,7 +14,22 @@
 			}
 		},
 		{
-			"match": "@(else_(?:ifos|iflua|ifdef|ifcmp|if)|ifos|iflua|ifdef|ifcmp|if|else|define|macro|error|print)",
+			"match": "(@macro) ([A-Za-z_][0-9A-Za-z_]*)",
+			"captures": {
+				"0": {
+					"name": "meta.preprocessor.macro"
+				},
+				"1": {
+					"name": "keyword.control.macro"
+				}
+			}
+		},
+		{
+			"match": "\\$[A-Za-z_][0-9A-Za-z_]*!\\(.*\\)",
+			"name": "meta.preprocessor.macro.invocation"
+		},
+		{
+			"match": "@(?:(?:(?:else_)?(?:ifos|iflua|ifdef|ifcmp|if|ifos|iflua|ifdef|ifcmp|if))|else|define|macro|error|print)",
 			"name": "keyword.control.directive.clue"
 		},
 		{
