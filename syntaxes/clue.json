@@ -3,7 +3,7 @@
 	"scopeName": "source.clue",
 	"patterns": [
 		{
-			"match": "(@version) ([0-9]+\\.?[0-9]*\\.?[0-9]*(?:-([0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*))?(?:\\+[0-9A-Za-z-]+)?$)",
+			"match": "(@version) (.+?(?=\n))",
 			"captures": {
 				"1": {
 					"name": "keyword.control.directive.clue"
