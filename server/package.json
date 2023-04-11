@@ -1,0 +1,10 @@
+{
+    "name": "clue-server",
+    "version": "0.0.1",
+    "engines": {
+        "node": "*"
+    },
+    "dependencies": {
+        "vscode-languageserver": "^8.1.0"
+    }
+}
