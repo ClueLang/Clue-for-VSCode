@@ -2,13 +2,14 @@
     "name": "clue",
     "version": "0.0.1",
     "engines": {
+        "node": "*",
         "vscode": "^1.75.0"
     },
     "publisher": "Felix44",
     "categories": [
         "Programming Languages"
     ],
-    "main": "./client/out/extension",
+    "main": "./out/extension",
     "contributes": {
         "languages": [{
             "id": "clue",
@@ -21,17 +22,28 @@
             "scopeName": "source.clue",
             "path": "./syntaxes/clue.json"
         }],
-        "commands": [{
-            "command": "clue.helloWorld",
-            "title": "Compile Clue"
-        }]
+        "configuration": {
+            "type": "object",
+            "title": "Clue Language Server",
+            "properties": {
+                "clue.path": {
+                    "type": "string",
+                    "default": "clue",
+                    "description": "Path to the Clue executable."
+                }
+            }
+        }
     },
     "scripts": {
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -b",
         "watch": "tsc -b -w",
-        "lint": "eslint ./client/src ./server/src --ext ts",
-        "postinstall": "cd client && npm install && cd ../server && npm install && cd .."
+        "lint": "eslint ./src --ext ts"
+    },
+    "dependencies": {
+        "vscode-languageclient": "^8.1.0",
+        "vscode-languageserver": "^8.1.0",
+        "vscode-languageserver-textdocument": "^1.0.8"
     },
     "devDependencies": {
         "@types/vscode": "^1.75.1",

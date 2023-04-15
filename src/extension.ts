@@ -1,20 +1,40 @@
-import * as vscode from 'vscode';
+import { workspace, ExtensionContext } from 'vscode';
+import { LanguageClient, TransportKind } from 'vscode-languageclient/node';
 
-export const activate = (ctx: vscode.ExtensionContext) => {
+let client: LanguageClient;
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "clue" is now active!');
-
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('clue.helloWorld', () => {
-		vscode.window.showErrorMessage('Hello World from clue!');
-	});
-
-	ctx.subscriptions.push(disposable);
+export const activate = (ctx: ExtensionContext) => {
+	const serverModule = ctx.asAbsolutePath('out/server.js');
+	const serverOptions = {
+		run: {
+			module: serverModule,
+			transport: TransportKind.ipc,
+		},
+		debug: {
+			module: serverModule,
+			transport: TransportKind.ipc,
+		},
+	};
+	const clientOptions = {
+		documentSelector: [{
+			scheme: 'file',
+			language: 'clue',
+		}],
+		synchronize: { fileEvents: workspace.createFileSystemWatcher('**/*.clue') },
+		outputChannelName: 'Clue Language Server',
+	};
+	client = new LanguageClient(
+		'clue',
+		'Clue Language Server',
+		serverOptions,
+		clientOptions,
+	);
+	client.start();
 }
 
-// This method is called when your extension is deactivated
-export function deactivate() {}
+export const deactivate = () => {
+	if (!client) {
+		return undefined;
+	}
+	return client.stop();
+};
