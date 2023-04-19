@@ -33,8 +33,5 @@ export const activate = (ctx: ExtensionContext) => {
 }
 
 export const deactivate = () => {
-	if (!client) {
-		return undefined;
-	}
-	return client.stop();
+	client?.stop();
 };
