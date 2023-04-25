@@ -29,7 +29,14 @@
                 "clue.path": {
                     "type": "string",
                     "default": "clue",
+                    "title": "Path to Clue executable",
                     "description": "Path to the Clue executable."
+                },
+                "clue.env": {
+                    "type": "object",
+                    "default": {},
+                    "title": "Environment",
+                    "description": "Environment variables to be passed to Clue."
                 }
             }
         }
