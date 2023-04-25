@@ -68,8 +68,19 @@ const handleChangedFile = async (document: TextDocument) => {
 };
 
 const runClue = async (path: string) => {
-    const cluePath = (await connection.workspace.getConfiguration({ section: 'clue' }))['path'] || 'clue';
-    const output = await promisify(exec)(`${cluePath} -D ${path}`).catch(e => ({ isError: true, ...e }));
+    const config = await connection.workspace.getConfiguration({ section: 'clue' });
+    const cluePath = config['path'] || 'clue';
+    const command = `${cluePath} -D ${path}`;
+    const env: { [key: string]: string } = { };
+    for (const [key, value] of Object.entries(config['env'] || { })) {
+        if (typeof value === 'object') {
+            env[key] = JSON.stringify(value);
+        }
+        else {
+            env[key] = String(value);
+        }
+    }
+    const output = await promisify(exec)(command, { env }).catch(e => ({ isError: true, ...e }));
     const { stdout, stderr, isError } = output;
     stdout && connection.console.log(stdout);
     stderr && connection.console.log(stderr);
