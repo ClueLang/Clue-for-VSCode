@@ -19,6 +19,8 @@ const documents = new TextDocuments(TextDocument);
 
 const workspaceFolders: WorkspaceFolder[] = [];
 
+let isClueAvailable: boolean = false;
+
 connection.onInitialize(params => {
     workspaceFolders.push(...(params.workspaceFolders || []));
     return {
@@ -34,10 +36,12 @@ connection.onInitialize(params => {
 
 connection.onInitialized(async () => {
     connection.client.register(DidChangeConfigurationNotification.type, undefined);
+    await checkCluePath();
     await handleAllFiles();
 });
 
 connection.onDidChangeConfiguration(async () => {
+    await checkCluePath();
     await handleAllFiles();
 });
 
@@ -49,7 +53,32 @@ documents.onDidSave(async change => {
     await handleChangedFile(change.document);
 });
 
+const checkCluePath = async () => {
+    const config = await connection.workspace.getConfiguration({ section: 'clue' });
+    const cluePath = config['path'] || 'clue';
+    const command = `${cluePath} -V`;
+    const output = await promisify(exec)(command).catch(e => ({ isError: true, ...e }));
+    const versionMatch = /^clue ((\d+)\.(\d+)\.\d+(-\w+)?)$/.exec(output.stdout.trim());
+    if (!versionMatch) {
+        connection.window.showErrorMessage('Clue is not available. Please install it and configure the path to it in your settings.');
+        isClueAvailable = false;
+        return;
+    }
+    const [_, version, major, minor] = versionMatch || [];
+    // must be Clue 3.2 or higher
+    if (major !== '3' || Number.parseInt(minor) < 2) {
+        connection.window.showErrorMessage(`Clue ${version} is not supported. Please install Clue 3.2 or higher and configure the path to it in your settings.`);
+        isClueAvailable = false;
+        return;
+    }
+    isClueAvailable = true;
+    connection.window.showInformationMessage(`Running Clue ${version}.`);
+};
+
 const handleAllFiles = async () => {
+    if (!isClueAvailable) {
+        return;
+    }
     const paths = workspaceFolders.map(({ uri }) => fileURLToPath(uri));
     for (const { uri } of documents.all()) {
         if (!paths.some(path => uri.startsWith(path))) {
@@ -62,6 +91,9 @@ const handleAllFiles = async () => {
 };
 
 const handleChangedFile = async (document: TextDocument) => {
+    if (!isClueAvailable) {
+        return;
+    }
     // check if document is a workspace
     const workspaceFolder = workspaceFolders.find(folder => document.uri.startsWith(folder.uri));
     await runClue(fileURLToPath((workspaceFolder || document).uri));
@@ -115,7 +147,8 @@ const runClue = async (path: string) => {
     }
     if (isError && errors.length === 0) {
         // something else went wrong
-        throw new Error(stderr);
+        connection.window.showErrorMessage('Clue encountered an error. Please check the output for more information.');
+        return;
     }
     // collect successfully compiled files from stdout
     const compiledFiles: string[] = [];
@@ -158,11 +191,13 @@ const runClue = async (path: string) => {
             diagnosticsByUri[uri] = [];
         }
         const text = await getLine(path, line, character);
+        const whitespaceIndex = text.search(/\s/);
+        const characterEnd = (whitespaceIndex === -1 ? text.length : whitespaceIndex) + character;
         diagnosticsByUri[uri].push({
             severity: DiagnosticSeverity.Error,
             range: {
                 start: { line, character },
-                end: { line, character: (text.search(/\S/) || text.length) + character },
+                end: { line, character: characterEnd },
             },
             message,
             source: 'clue',
