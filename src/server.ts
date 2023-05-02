@@ -22,6 +22,7 @@ const workspaceFolders: WorkspaceFolder[] = [];
 let isClueAvailable: boolean = false;
 
 connection.onInitialize(params => {
+    connection.sendNotification('clue/status', 'Starting Clue…');
     connection.console.info(`Initializing Clue Language Server`);
     workspaceFolders.push(...(params.workspaceFolders || []));
     connection.console.info(`Workspace folders: ${JSON.stringify(workspaceFolders.map(wf => fileURLToPath(wf.uri)))}`);
@@ -69,6 +70,7 @@ const checkCluePath = async () => {
     const versionMatch = /^clue ((\d+)\.(\d+)\.\d+(-\w+)?)$/.exec(output.stdout.trim());
     if (!versionMatch) {
         const message = 'Clue is not available. Please install it and configure the path to it in your settings.';
+        connection.sendNotification('clue/status', { text: '$(error) Error starting Clue', isError: true });
         connection.console.error(message);
         connection.window.showErrorMessage(message);
         isClueAvailable = false;
@@ -78,15 +80,15 @@ const checkCluePath = async () => {
     // must be Clue 3.2 or higher
     if (major !== '3' || Number.parseInt(minor) < 2) {
         const message = `Clue ${version} is not supported. Please install Clue 3.2 or higher and configure the path to it in your settings.`;
+        connection.sendNotification('clue/status', { text: '$(error) Error starting Clue', isError: true });
         connection.console.error(message);
         connection.window.showErrorMessage(message);
         isClueAvailable = false;
         return;
     }
     isClueAvailable = true;
-    const message = `Running Clue ${version}.`;
-    connection.console.info(message);
-    connection.window.showInformationMessage(message);
+    connection.sendNotification('clue/status', { text: `$(question) Clue ${version}`, isError: false });
+    connection.console.info(`Running Clue ${version}`);
 };
 
 const handleAllFiles = async () => {
