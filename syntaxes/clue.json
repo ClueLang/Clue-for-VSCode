@@ -25,6 +25,17 @@
 			}
 		},
 		{
+			"match": "(@import) (\".*\")",
+			"captures": {
+				"1": {
+					"name": "keyword.control.import.clue"
+				},
+				"2": {
+					"name": "string"
+				}
+			}
+		},
+		{
 			"match": "\\$[A-Za-z_][0-9A-Za-z_]*!",
 			"name": "meta.preprocessor.macro.invocation.clue"
 		},
