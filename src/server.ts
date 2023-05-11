@@ -21,6 +21,8 @@ const workspaceFolders: WorkspaceFolder[] = [];
 
 let isClueAvailable: boolean = false;
 
+let env: { [key: string]: string } = { };
+
 connection.onInitialize(params => {
     connection.sendNotification('clue/status', 'Starting Clue…');
     connection.console.info(`Initializing Clue Language Server`);
@@ -32,7 +34,8 @@ connection.onInitialize(params => {
                 change: TextDocumentSyncKind.Incremental,
                 openClose: true,
                 save: true,
-            }
+            },
+            hoverProvider: true,
         }
     };
 });
@@ -53,11 +56,42 @@ connection.onDidChangeConfiguration(async () => {
 documents.onDidOpen(async change => {
     connection.console.info(`Opened ${fileURLToPath(change.document.uri)}`);
     await handleChangedFile(change.document);
-})
+});
 
 documents.onDidSave(async change => {
     connection.console.info(`Saved ${fileURLToPath(change.document.uri)}`);
     await handleChangedFile(change.document);
+});
+
+connection.onHover(async ({ textDocument, position }) => {
+    const document = documents.get(textDocument.uri);
+    if (!document) {
+        return null;
+    }
+    const line = document.getText({
+        start: { line: position.line, character: 0 },
+        end: { line: position.line, character: Number.POSITIVE_INFINITY },
+    });
+    // find the dollar sign
+    const start = line.lastIndexOf('$', position.character);
+    if (start === -1) {
+        return null;
+    }
+    const match = /([a-zA-Z_][a-zA-Z0-9_]*).*/.exec(line.substring(start + 1));
+    const token = match?.[1];
+    if (!token) {
+        return null;
+    }
+    const value = env[token];
+    if (value === undefined) {
+        return null;
+    }
+    return {
+        contents: {
+            language: 'clue',
+            value: `(env) $${token} = "${value}"`,
+        }
+    };
 });
 
 const checkCluePath = async () => {
@@ -87,8 +121,18 @@ const checkCluePath = async () => {
         return;
     }
     isClueAvailable = true;
-    connection.sendNotification('clue/status', { text: `$(question) Clue ${version}`, isError: false });
+    connection.sendNotification('clue/status', { text: `Clue ${version}`, isError: false });
     connection.console.info(`Running Clue ${version}`);
+    // update environmental variables
+    env = { };
+    for (const [key, value] of Object.entries(config['env'] || { })) {
+        if (typeof value === 'object') {
+            env[key] = JSON.stringify(value);
+        }
+        else {
+            env[key] = String(value);
+        }
+    }
 };
 
 const handleAllFiles = async () => {
@@ -136,15 +180,6 @@ const runClue = async (path: string) => {
     const cluePath = config['path'] || 'clue';
     const command = `${cluePath} -D ${path}`;
     connection.console.info(`Running ${command}`);
-    const env: { [key: string]: string } = { };
-    for (const [key, value] of Object.entries(config['env'] || { })) {
-        if (typeof value === 'object') {
-            env[key] = JSON.stringify(value);
-        }
-        else {
-            env[key] = String(value);
-        }
-    }
     const output = await promisify(exec)(command, { env }).catch(e => ({ isError: true, ...e }));
     const { stdout, stderr, isError } = output;
     if (stdout) {
