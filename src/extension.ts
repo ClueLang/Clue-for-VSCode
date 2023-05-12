@@ -42,6 +42,15 @@ export const activate = (ctx: vscode.ExtensionContext) => {
         const color = message.isError ? 'statusBarItem.errorBackground' : 'statusBarItem.background';
         statusBarItem.backgroundColor = new vscode.ThemeColor(color);
     });
+    const hoverProvider = vscode.languages.registerHoverProvider('clue', {
+        async provideHover(document, position) {
+            return await client.sendRequest('clue/hover', {
+                textDocument: document,
+                position,
+            });
+        },
+    });
+    ctx.subscriptions.push(hoverProvider);
     client.start();
 }
 
