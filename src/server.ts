@@ -101,7 +101,7 @@ const checkCluePath = async () => {
     const command = `${cluePath} -V`;
     connection.console.info(`Running ${command}`);
     const output = await promisify(exec)(command).catch(e => ({ isError: true, ...e }));
-    const versionMatch = /^clue ((\d+)\.(\d+)\.\d+(-\w+)?)$/.exec(output.stdout.trim());
+    const versionMatch = /^clue ((\d+)\.(\d+)\.\d+(-\w+)?(\+\w+)?)$/.exec(output.stdout.trim());
     if (!versionMatch) {
         const message = 'Clue is not available. Please install it and configure the path to it in your settings.';
         connection.sendNotification('clue/status', { text: '$(error) Error starting Clue', isError: true });
