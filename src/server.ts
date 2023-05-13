@@ -21,7 +21,7 @@ const workspaceFolders: WorkspaceFolder[] = [];
 
 let isClueAvailable: boolean = false;
 
-let env: { [key: string]: string } = { };
+let env: { [key: string]: string | undefined } = { };
 
 connection.onInitialize(params => {
     connection.sendNotification('clue/status', 'Starting Clue…');
@@ -124,7 +124,7 @@ const checkCluePath = async () => {
     connection.sendNotification('clue/status', { text: `Clue ${version}`, isError: false });
     connection.console.info(`Running Clue ${version}`);
     // update environmental variables
-    env = { };
+    env = { ...process.env };
     for (const [key, value] of Object.entries(config['env'] || { })) {
         if (typeof value === 'object') {
             env[key] = JSON.stringify(value);
