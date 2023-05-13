@@ -143,17 +143,20 @@ const handleAllFiles = async () => {
     const workspaceFolderPaths = workspaceFolders.map(({ uri }) => fileURLToPath(uri));
     connection.console.info(`Workspace folders: ${JSON.stringify(workspaceFolderPaths)}`);
     connection.console.info(`Documents: ${JSON.stringify(documents.all().map(d => fileURLToPath(d.uri)))}`);
-    const paths = [...workspaceFolderPaths];
+    const otherPaths: string[] = [];
     for (const { uri } of documents.all()) {
         const path = fileURLToPath(uri);
         if (!workspaceFolderPaths.some(wfp => path.startsWith(wfp))) {
             // document is not in a workspace
-            paths.push(fileURLToPath(uri));
+            otherPaths.push(fileURLToPath(uri));
         }
     }
-    connection.console.info(`Paths to run Clue on: ${JSON.stringify(paths)}`);
-    for (const path of paths) {
-        await runClue(path);
+    connection.console.info(`Paths to run Clue on: ${JSON.stringify([...workspaceFolderPaths, ...otherPaths])}`);
+    for (const path of workspaceFolderPaths) {
+        await runClue(path, true);
+    }
+    for (const path of otherPaths) {
+        await runClue(path, false);
     }
 };
 
@@ -167,18 +170,21 @@ const handleChangedFile = async (document: TextDocument) => {
     if (workspaceFolder) {
         const path = fileURLToPath(workspaceFolder.uri);
         connection.console.info(`Document is in workspace: ${path}`);
-        await runClue(path);
+        await runClue(path, true);
     }
     else {
         connection.console.info(`Document is not in workspace`);
-        await runClue(fileURLToPath(document.uri));
+        await runClue(fileURLToPath(document.uri), false);
     }
 };
 
-const runClue = async (path: string) => {
+const runClue = async (
+    root: string,
+    isDirectory: boolean,
+) => {
     const config = await connection.workspace.getConfiguration({ section: 'clue' });
     const cluePath = config['path'] || 'clue';
-    const command = `${cluePath} -D ${path}`;
+    const command = `${cluePath} -D ${root}`;
     connection.console.info(`Running ${command}`);
     const output = await promisify(exec)(command, { env }).catch(e => ({ isError: true, ...e }));
     const { stdout, stderr, isError } = output;
@@ -250,7 +256,8 @@ const runClue = async (path: string) => {
                 documentsCache[uri] = documentMaybe;
             }
             else {
-                const text = await fs.readFile(path, 'utf8');
+                // Clue does not print the full path when run on a single file
+                const text = await fs.readFile(isDirectory ? path : root, 'utf8');
                 documentsCache[uri] = TextDocument.create(uri, 'clue', 1, text);
             }
         }
