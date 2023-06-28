@@ -40,7 +40,7 @@
 			"name": "meta.preprocessor.macro.invocation.clue"
 		},
 		{
-			"match": "@(?:(?:(?:else_)?(?:ifos|iflua|ifdef|ifcmp|if|ifos|iflua|ifdef|ifcmp|if))|else|define|macro|error|print)",
+			"match": "@(?:(?:(?:else_)?(?:ifos|iflua|ifdef|ifndef|ifcmp|if|ifos|iflua|ifdef|ifcmp|if))|else|define|macro|error|print)",
 			"name": "keyword.control.directive.clue"
 		},
 		{
