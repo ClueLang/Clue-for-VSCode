@@ -144,7 +144,7 @@
 			]
 		},
 		{
-			"match": "\\b(if|elseif|else|for|of|in|with|while|meta|until|fn|method|return|loop|enum|continue|break|try|catch|match|default|macro)\\b",
+			"match": "\\b(if|elseif|else|for|of|in|with|while|meta|until|fn|method|return|loop|enum|goto|continue|break|try|catch|match|default|macro)\\b",
 			"name": "keyword.control.clue"
 		},
 		{
